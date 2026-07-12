@@ -1,0 +1,14 @@
+loop-hunter
+Copyright 2026 Henrique Bucher
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this software except in compliance with the License. You may obtain a copy of
+the License in the LICENSE file or at http://www.apache.org/licenses/LICENSE-2.0
+
+This software is an out-of-tree LLVM pass plugin. It uses LLVM's header APIs at
+build time. LLVM is a separate project, licensed under the Apache License 2.0
+with LLVM exceptions (https://llvm.org/LICENSE.txt), and is not distributed with
+this software.
+
+Irreducible-loop detection uses LLVM's GenericCycleInfo, which implements the
+single-pass DFS loop-identification algorithm of Wei, Tan, and Chen (SAS 2007).
