@@ -18,6 +18,20 @@ single-pass DFS), which captures *all* cycles including irreducible ones. A
 cycle is irreducible iff it has more than one entry
 (`Cycle::isReducible() == (Entries.size() == 1)`).
 
+## Why a pass, not a clang-tidy check?
+
+Because irreducibility is a property of the LLVM IR after inlining and CFG
+cleanup, not of the source text. clang-tidy runs on the AST, one translation
+unit, before any optimization, so it can only match syntax like "a `case` inside
+a loop". But the same resumable-parser source is irreducible when the parser
+state is runtime-unknown and perfectly reducible when the caller passes a
+constant state the inliner can fold. A syntactic check false-positives on the
+second case, and it misses irreducibility that jump threading manufactures at
+`-O2`, where there is no source pattern to match at all. loop-hunter runs
+`GenericCycleInfo` right before the vectorizer, at the `-O` level you actually
+ship, so it reports the loops the optimizer really skips in the code it really
+emits, not the ones that merely look risky.
+
 ## Build
 
     ./build.sh            # needs llvm-config-20 / clang++-20
